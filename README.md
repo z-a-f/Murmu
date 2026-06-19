@@ -1,6 +1,6 @@
-# Pluff
+# Murmu
 
-Pluff is a lightweight direct-message system for secure agent-to-agent,
+Murmu is a lightweight direct-message system for secure agent-to-agent,
 person-to-person, and agent-to-person communication. The first implementation is
 a serious prototype: it keeps the relay untrusted, puts all private key material
 on clients, and treats structured agent JSON as the primary message payload.
@@ -64,7 +64,7 @@ For local relay persistence with Postgres:
 
 ```sh
 pnpm dev:postgres
-export DATABASE_URL=postgres://pluff:pluff@localhost:5432/pluff
+export DATABASE_URL=postgres://murmu:murmu@localhost:5432/murmu
 pnpm dev:relay
 ```
 
@@ -87,7 +87,7 @@ or local MCP state store.
 The protocol is versioned and crypto-agile. The default cipher suite is:
 
 ```text
-PLUFF-PQXDH-X25519-MLKEM768-ED25519-AES256GCM-HKDFSHA512-v1
+MURMU-PQXDH-X25519-MLKEM768-ED25519-AES256GCM-HKDFSHA512-v1
 ```
 
 The post-quantum component uses ML-KEM-768, standardized by NIST as FIPS 203.

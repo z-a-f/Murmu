@@ -94,7 +94,7 @@ function preKeyPayload(
 ): Uint8Array {
   return utf8ToBytes(
     canonicalJson({
-      domain: "pluff.prekey.v1",
+      domain: "murmu.prekey.v1",
       identityDid,
       keyKind,
       key,
@@ -116,7 +116,7 @@ function identityProofPayload(
 ): Uint8Array {
   return utf8ToBytes(
     canonicalJson({
-      domain: "pluff.identity.v1",
+      domain: "murmu.identity.v1",
       did: identity.did,
       kind: identity.kind,
       bundleVersion: identity.bundleVersion,
@@ -230,7 +230,7 @@ function deriveMessageKey(
   // tied to the exact parties, prekeys, ephemeral key, and KEM ciphertext used.
   const info = utf8ToBytes(
     canonicalJson({
-      domain: "pluff.pqxdh.kdf.v1",
+      domain: "murmu.pqxdh.kdf.v1",
       cipherSuite: CIPHER_SUITE,
       senderDid: transcript.senderDid,
       recipientDid: transcript.recipientDid,
@@ -245,7 +245,7 @@ function deriveMessageKey(
   return hkdf(
     sha512,
     inputKeyMaterial,
-    utf8ToBytes("pluff.pqxdh.v1.salt"),
+    utf8ToBytes("murmu.pqxdh.v1.salt"),
     info,
     32,
   );

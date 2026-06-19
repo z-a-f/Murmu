@@ -5,7 +5,7 @@ import {
   verifyRelayRequest,
   type EncryptedEnvelope,
   type PreKeyBundle,
-} from "@pluff/protocol";
+} from "@murmu/protocol";
 import type { RelayStore } from "./store.js";
 
 const MAX_BODY_BYTES = 1024 * 1024;

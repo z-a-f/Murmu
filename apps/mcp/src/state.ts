@@ -1,8 +1,8 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { homedir } from "node:os";
-import type { LocalAccount } from "@pluff/client";
-import type { PublicIdentity } from "@pluff/protocol";
+import type { LocalAccount } from "@murmu/client";
+import type { PublicIdentity } from "@murmu/protocol";
 
 interface McpStateData {
   accounts: Record<string, LocalAccount>;
@@ -55,10 +55,10 @@ export class McpStateStore {
 }
 
 function defaultStatePath(): string {
-  if (process.env.PLUFF_MCP_STATE) {
-    return process.env.PLUFF_MCP_STATE;
+  if (process.env.MURMU_MCP_STATE) {
+    return process.env.MURMU_MCP_STATE;
   }
   const dataHome = process.env.XDG_DATA_HOME ?? join(homedir(), ".local", "share");
-  return join(dataHome, "pluff", "mcp-state.json");
+  return join(dataHome, "murmu", "mcp-state.json");
 }
 

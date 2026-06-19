@@ -10,7 +10,7 @@ import {
   type PreKeyBundle,
   type PreKeyClaim,
   type PublicIdentity,
-} from "@pluff/protocol";
+} from "@murmu/protocol";
 import type {
   RegistrationResult,
   RelayClientOptions,

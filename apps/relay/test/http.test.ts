@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { type AddressInfo } from "node:net";
-import { createPreKeyBundle, RelayClient } from "@pluff/client";
+import { createPreKeyBundle, RelayClient } from "@murmu/client";
 import {
   createAgentMessage,
   decryptAgentMessage,
@@ -9,7 +9,7 @@ import {
   generateOneTimePreKey,
   generateSignedPreKey,
   publicIdentity,
-} from "@pluff/protocol";
+} from "@murmu/protocol";
 import { createRelayServer } from "../src/server.js";
 import { MemoryRelayStore } from "../src/store.js";
 

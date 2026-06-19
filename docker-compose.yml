@@ -2,14 +2,14 @@ services:
   postgres:
     image: postgres:16-alpine
     environment:
-      POSTGRES_USER: pluff
-      POSTGRES_PASSWORD: pluff
-      POSTGRES_DB: pluff
+      POSTGRES_USER: murmu
+      POSTGRES_PASSWORD: murmu
+      POSTGRES_DB: murmu
     ports:
       - "5432:5432"
     volumes:
-      - pluff-postgres:/var/lib/postgresql/data
+      - murmu-postgres:/var/lib/postgresql/data
 
 volumes:
-  pluff-postgres:
+  murmu-postgres:
 

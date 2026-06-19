@@ -1,5 +1,5 @@
 {
-  "name": "@pluff/relay",
+  "name": "@murmu/relay",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -12,11 +12,11 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@pluff/protocol": "workspace:*",
+    "@murmu/protocol": "workspace:*",
     "pg": "^8.13.1"
   },
   "devDependencies": {
-    "@pluff/client": "workspace:*",
+    "@murmu/client": "workspace:*",
     "@types/node": "^25.9.3",
     "@types/pg": "^8.11.10",
     "tsx": "^4.19.2",

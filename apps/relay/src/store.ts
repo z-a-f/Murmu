@@ -3,7 +3,7 @@ import {
   type EncryptedEnvelope,
   type PreKeyBundle,
   type PreKeyClaim,
-} from "@pluff/protocol";
+} from "@murmu/protocol";
 
 export interface StoredEnvelope {
   id: string;

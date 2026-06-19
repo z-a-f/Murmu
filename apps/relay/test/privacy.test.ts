@@ -7,7 +7,7 @@ import {
   generateSignedPreKey,
   publicIdentity,
   type PreKeyClaim,
-} from "@pluff/protocol";
+} from "@murmu/protocol";
 import { MemoryRelayStore } from "../src/store.js";
 
 describe("relay privacy boundary", () => {

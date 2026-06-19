@@ -1,7 +1,7 @@
-export const PROTOCOL_VERSION = "pluff.e2ee.v1";
+export const PROTOCOL_VERSION = "murmu.e2ee.v1";
 
 export const CIPHER_SUITE =
-  "PLUFF-PQXDH-X25519-MLKEM768-ED25519-AES256GCM-HKDFSHA512-v1";
+  "MURMU-PQXDH-X25519-MLKEM768-ED25519-AES256GCM-HKDFSHA512-v1";
 
 export type Base64UrlString = string;
 

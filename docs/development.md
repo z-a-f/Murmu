@@ -52,7 +52,7 @@ pnpm dev:postgres
 Start the relay with persistent storage:
 
 ```sh
-export DATABASE_URL=postgres://pluff:pluff@localhost:5432/pluff
+export DATABASE_URL=postgres://murmu:murmu@localhost:5432/murmu
 pnpm dev:relay
 ```
 
@@ -77,12 +77,12 @@ Run the MCP stdio server:
 pnpm dev:mcp
 ```
 
-The MCP server stores local private identity state in `PLUFF_MCP_STATE` when set.
+The MCP server stores local private identity state in `MURMU_MCP_STATE` when set.
 Otherwise it writes to the user data directory. Set a temporary state file when
 debugging repeatable local sessions:
 
 ```sh
-export PLUFF_MCP_STATE=/tmp/pluff-mcp-state.json
+export MURMU_MCP_STATE=/tmp/murmu-mcp-state.json
 pnpm dev:mcp
 ```
 

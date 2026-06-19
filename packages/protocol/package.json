@@ -1,12 +1,12 @@
 {
-  "name": "@pluff/protocol",
+  "name": "@murmu/protocol",
   "version": "0.1.0",
-  "description": "Cryptographic protocol primitives for Pluff",
+  "description": "Cryptographic protocol primitives for Murmu",
   "license": "Apache-2.0",
   "author": "z-a-f",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/z-a-f/Pluff.git",
+    "url": "git+https://github.com/z-a-f/Murmu.git",
     "directory": "packages/protocol"
   },
   "type": "module",

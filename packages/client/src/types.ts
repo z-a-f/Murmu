@@ -6,7 +6,7 @@ import type {
   PreKeyBundle,
   PreKeyClaim,
   PublicIdentity,
-} from "@pluff/protocol";
+} from "@murmu/protocol";
 
 export interface RelayClientOptions {
   baseUrl: string;

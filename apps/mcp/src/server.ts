@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { createInterface } from "node:readline";
-import { PluffTools, toolDefinitions } from "./tools.js";
+import { MurmuTools, toolDefinitions } from "./tools.js";
 
 interface JsonRpcRequest {
   jsonrpc: "2.0";
@@ -9,7 +9,7 @@ interface JsonRpcRequest {
   params?: Record<string, unknown>;
 }
 
-const tools = new PluffTools();
+const tools = new MurmuTools();
 
 const lines = createInterface({
   input: process.stdin,
@@ -59,7 +59,7 @@ async function handle(request: JsonRpcRequest): Promise<unknown> {
       return {
         protocolVersion: "2024-11-05",
         capabilities: { tools: {} },
-        serverInfo: { name: "pluff-mcp", version: "0.1.0" },
+        serverInfo: { name: "murmu-mcp", version: "0.1.0" },
       };
     case "tools/list":
       return { tools: toolDefinitions };

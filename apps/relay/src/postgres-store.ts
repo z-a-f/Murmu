@@ -8,7 +8,7 @@ import {
   type OneTimePreKey,
   type PreKeyBundle,
   type PreKeyClaim,
-} from "@pluff/protocol";
+} from "@murmu/protocol";
 import type { RelayStore, StoredEnvelope } from "./store.js";
 
 export class PostgresRelayStore implements RelayStore {

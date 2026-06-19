@@ -20,10 +20,10 @@ importers:
 
   apps/mcp:
     dependencies:
-      '@pluff/client':
+      '@murmu/client':
         specifier: workspace:*
         version: link:../../packages/client
-      '@pluff/protocol':
+      '@murmu/protocol':
         specifier: workspace:*
         version: link:../../packages/protocol
     devDependencies:
@@ -42,14 +42,14 @@ importers:
 
   apps/relay:
     dependencies:
-      '@pluff/protocol':
+      '@murmu/protocol':
         specifier: workspace:*
         version: link:../../packages/protocol
       pg:
         specifier: ^8.13.1
         version: 8.21.0
     devDependencies:
-      '@pluff/client':
+      '@murmu/client':
         specifier: workspace:*
         version: link:../../packages/client
       '@types/node':
@@ -70,10 +70,10 @@ importers:
 
   apps/web:
     dependencies:
-      '@pluff/client':
+      '@murmu/client':
         specifier: workspace:*
         version: link:../../packages/client
-      '@pluff/protocol':
+      '@murmu/protocol':
         specifier: workspace:*
         version: link:../../packages/protocol
       lucide-react:
@@ -107,7 +107,7 @@ importers:
 
   packages/client:
     dependencies:
-      '@pluff/protocol':
+      '@murmu/protocol':
         specifier: workspace:*
         version: link:../protocol
     devDependencies:

@@ -1,6 +1,6 @@
 # Architecture
 
-Pluff has four trust boundaries:
+Murmu has four trust boundaries:
 
 1. Local identity storage holds private signing, agreement, and KEM keys.
 2. The protocol package creates and opens encrypted envelopes.

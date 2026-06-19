@@ -12,7 +12,7 @@ import {
   RelayClient,
   createPreKeyBundle,
   type LocalAccount,
-} from "@pluff/client";
+} from "@murmu/client";
 import {
   decryptAgentMessage,
   encryptAgentMessage,
@@ -23,7 +23,7 @@ import {
   createAgentMessage,
   type AgentMessage,
   type AgentMessageKind,
-} from "@pluff/protocol";
+} from "@murmu/protocol";
 import { getAccount, listAccounts, saveAccount } from "./db.js";
 import "./styles.css";
 
@@ -185,7 +185,7 @@ export function App() {
     <main className="app-shell">
       <header className="topbar">
         <div>
-          <h1>Pluff</h1>
+          <h1>Murmu</h1>
           <p>{status}</p>
         </div>
         <label className="relay-input">

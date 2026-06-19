@@ -1,6 +1,6 @@
-import type { LocalAccount } from "@pluff/client";
+import type { LocalAccount } from "@murmu/client";
 
-const DB_NAME = "pluff-web";
+const DB_NAME = "murmu-web";
 const DB_VERSION = 1;
 const ACCOUNTS = "accounts";
 

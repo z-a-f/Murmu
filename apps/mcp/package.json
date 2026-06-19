@@ -1,17 +1,17 @@
 {
-  "name": "@pluff/mcp",
+  "name": "@murmu/mcp",
   "version": "0.1.0",
-  "description": "Model Context Protocol server for Pluff",
+  "description": "Model Context Protocol server for Murmu",
   "license": "Apache-2.0",
   "author": "z-a-f",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/z-a-f/Pluff.git",
+    "url": "git+https://github.com/z-a-f/Murmu.git",
     "directory": "apps/mcp"
   },
   "type": "module",
   "bin": {
-    "pluff-mcp": "./dist/server.js"
+    "murmu-mcp": "./dist/server.js"
   },
   "files": [
     "dist"
@@ -23,8 +23,8 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
-    "@pluff/client": "workspace:*",
-    "@pluff/protocol": "workspace:*"
+    "@murmu/client": "workspace:*",
+    "@murmu/protocol": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^25.9.3",

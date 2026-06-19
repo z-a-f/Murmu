@@ -2,7 +2,7 @@ import {
   RelayClient,
   createPreKeyBundle,
   type LocalAccount,
-} from "@pluff/client";
+} from "@murmu/client";
 import {
   decryptAgentMessage,
   encryptAgentMessage,
@@ -13,7 +13,7 @@ import {
   createAgentMessage,
   type AgentMessageKind,
   type JsonObject,
-} from "@pluff/protocol";
+} from "@murmu/protocol";
 import { McpStateStore } from "./state.js";
 
 export interface McpToolDefinition {
@@ -29,7 +29,7 @@ export interface McpToolDefinition {
 export const toolDefinitions: McpToolDefinition[] = [
   {
     name: "create_identity",
-    description: "Create a local Pluff person or agent identity.",
+    description: "Create a local Murmu person or agent identity.",
     inputSchema: {
       type: "object",
       properties: {
@@ -110,7 +110,7 @@ export const toolDefinitions: McpToolDefinition[] = [
   },
 ];
 
-export class PluffTools {
+export class MurmuTools {
   constructor(private readonly state = new McpStateStore()) {}
 
   async call(name: string, args: Record<string, unknown>): Promise<unknown> {

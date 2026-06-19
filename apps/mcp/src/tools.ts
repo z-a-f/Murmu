@@ -146,6 +146,7 @@ export class NoNoMessageTools {
       signedPreKey,
       oneTimePreKeys,
       contacts: {},
+      processedEnvelopeIds: [],
     };
     await this.state.saveAccount(account);
     return {
@@ -197,9 +198,18 @@ export class NoNoMessageTools {
     const account = await this.state.getAccount(stringArg(args, "recipientDid"));
     const ack = booleanArg(args, "ack", true);
     const records = await relay.listEnvelopes(account.identity.did, account.identity);
+    const processed = new Set(account.processedEnvelopeIds ?? []);
     const messages = [];
 
     for (const record of records) {
+      // Skip an envelope we have already decrypted; a relay that ignores acks
+      // could redeliver it. Re-ack so it stops coming back.
+      if (processed.has(record.id)) {
+        if (ack) {
+          await relay.ackEnvelope(record.id, account.identity);
+        }
+        continue;
+      }
       const senderIdentity =
         account.contacts[record.senderDid] ?? await relay.resolveIdentity(record.senderDid);
       const oneTimePreKey = account.oneTimePreKeys.find(
@@ -211,6 +221,7 @@ export class NoNoMessageTools {
         oneTimePreKey,
         senderIdentity,
       });
+      processed.add(record.id);
       messages.push({
         envelopeId: record.id,
         senderDid: record.senderDid,
@@ -221,6 +232,9 @@ export class NoNoMessageTools {
         await relay.ackEnvelope(record.id, account.identity);
       }
     }
+
+    account.processedEnvelopeIds = [...processed];
+    await this.state.saveAccount(account);
 
     return { messages };
   }

@@ -27,6 +27,9 @@ export interface LocalAccount {
   signedPreKey: LocalSignedPreKey;
   oneTimePreKeys: LocalOneTimePreKey[];
   contacts: Record<string, PublicIdentity>;
+  // Envelope ids already decrypted by this account. Used to ignore a relay that
+  // ignores acks and redelivers, so a captured envelope cannot be replayed.
+  processedEnvelopeIds?: string[];
 }
 
 export interface RegistrationResult {

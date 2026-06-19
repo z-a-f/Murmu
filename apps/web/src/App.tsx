@@ -93,6 +93,7 @@ export function App() {
         signedPreKey,
         oneTimePreKeys,
         contacts: {},
+        processedEnvelopeIds: [],
       };
       await saveAccount(account);
       await refreshAccounts();
@@ -132,8 +133,15 @@ export function App() {
     }
     await run("Fetching inbox", async () => {
       const records = await relay.listEnvelopes(activeAccount.identity.did, activeAccount.identity);
+      const processed = new Set(activeAccount.processedEnvelopeIds ?? []);
       const messages: InboxItem[] = [];
       for (const record of records) {
+        // Ignore an envelope we already decrypted (a relay that ignores acks
+        // could redeliver it); re-ack so it stops coming back.
+        if (processed.has(record.id)) {
+          await relay.ackEnvelope(record.id, activeAccount.identity);
+          continue;
+        }
         const senderIdentity =
           activeAccount.contacts[record.senderDid] ?? await relay.resolveIdentity(record.senderDid);
         const oneTimePreKey = activeAccount.oneTimePreKeys.find(
@@ -145,9 +153,12 @@ export function App() {
           oneTimePreKey,
           senderIdentity,
         });
+        processed.add(record.id);
         messages.push({ envelopeId: record.id, senderDid: record.senderDid, message });
         await relay.ackEnvelope(record.id, activeAccount.identity);
       }
+      await saveAccount({ ...activeAccount, processedEnvelopeIds: [...processed] });
+      await refreshAccounts();
       setInbox(messages);
     });
   }

@@ -114,7 +114,6 @@ export interface EncryptedEnvelope {
   ephemeralAgreementPublicKey: Base64UrlString;
   kemCiphertext: Base64UrlString;
   nonce: Base64UrlString;
-  associatedData: Base64UrlString;
   ciphertext: Base64UrlString;
 }
 

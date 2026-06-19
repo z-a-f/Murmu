@@ -10,7 +10,6 @@ import {
   concatBytes,
   idWithPrefix,
   randomBytes,
-  timingSafeEqual,
   utf8ToBytes,
 } from "./encoding.js";
 import { assertDidMatchesSigningKey, didKeyFromEd25519PublicKey } from "./did.js";
@@ -130,7 +129,7 @@ function identityProofPayload(
 }
 
 function envelopeHeader(
-  envelope: Omit<EncryptedEnvelope, "associatedData" | "ciphertext">,
+  envelope: Omit<EncryptedEnvelope, "ciphertext">,
 ): Record<string, unknown> {
   return {
     id: envelope.id,
@@ -148,7 +147,7 @@ function envelopeHeader(
 }
 
 function associatedDataFor(
-  envelope: Omit<EncryptedEnvelope, "associatedData" | "ciphertext">,
+  envelope: Omit<EncryptedEnvelope, "ciphertext">,
 ): Uint8Array {
   return utf8ToBytes(canonicalJson(envelopeHeader(envelope)));
 }
@@ -452,7 +451,7 @@ export async function encryptAgentMessage(input: {
     kemCiphertext,
   });
   const nonce = randomBytes(12);
-  const baseEnvelope: Omit<EncryptedEnvelope, "associatedData" | "ciphertext"> = {
+  const baseEnvelope: Omit<EncryptedEnvelope, "ciphertext"> = {
     id: idWithPrefix("env"),
     protocolVersion: PROTOCOL_VERSION,
     cipherSuite: CIPHER_SUITE,
@@ -478,7 +477,6 @@ export async function encryptAgentMessage(input: {
 
   return {
     ...baseEnvelope,
-    associatedData: bytesToBase64Url(aad),
     ciphertext: bytesToBase64Url(ciphertext),
   };
 }
@@ -509,11 +507,8 @@ export async function decryptAgentMessage(
     throw new Error("Envelope one-time prekey does not match local material");
   }
 
-  const { associatedData: _associatedData, ciphertext: _ciphertext, ...baseEnvelope } = envelope;
+  const { ciphertext: _ciphertext, ...baseEnvelope } = envelope;
   const aad = associatedDataFor(baseEnvelope);
-  if (!timingSafeEqual(aad, keyBytes(envelope.associatedData))) {
-    throw new Error("Envelope associated data mismatch");
-  }
 
   const ephemeralPublicKey = keyBytes(envelope.ephemeralAgreementPublicKey);
   const dhParts = [
@@ -531,20 +526,26 @@ export async function decryptAgentMessage(
     ),
   ];
 
-  const selectedKemSecretKey = material.oneTimePreKey?.pqKemSecretKey
-    ?? material.signedPreKey.pqKemSecretKey;
-
-  if (envelope.preKeyIds.oneTimePreKeyId) {
-    if (!material.oneTimePreKey) {
-      throw new Error("Envelope requires one-time prekey material");
-    }
+  // Gate both the DH4 term and the KEM secret on the prekey the envelope
+  // actually declares, so the two never select inconsistently.
+  const oneTimePreKey = envelope.preKeyIds.oneTimePreKeyId
+    ? material.oneTimePreKey
+    : undefined;
+  if (envelope.preKeyIds.oneTimePreKeyId && !oneTimePreKey) {
+    throw new Error("Envelope requires one-time prekey material");
+  }
+  if (oneTimePreKey) {
     dhParts.push(
       x25519.getSharedSecret(
-        keyBytes(material.oneTimePreKey.agreementSecretKey),
+        keyBytes(oneTimePreKey.agreementSecretKey),
         ephemeralPublicKey,
       ),
     );
   }
+
+  const selectedKemSecretKey = oneTimePreKey
+    ? oneTimePreKey.pqKemSecretKey
+    : material.signedPreKey.pqKemSecretKey;
 
   const kemSharedSecret = mlKemDecapsulate(
     keyBytes(envelope.kemCiphertext),

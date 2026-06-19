@@ -10,6 +10,26 @@ import type { RelayStore } from "./store.js";
 
 const MAX_BODY_BYTES = 1024 * 1024;
 
+// A signed request is valid only within the auth clock-skew window, so a nonce
+// needs to be remembered for twice that window to reliably reject replays.
+// NOTE: this cache is per-process; a multi-instance relay needs a shared store.
+const NONCE_TTL_MS = 10 * 60 * 1000;
+const seenNonces = new Map<string, number>();
+
+function rememberNonce(did: string, nonce: string): void {
+  const now = Date.now();
+  for (const [key, expiry] of seenNonces) {
+    if (expiry <= now) {
+      seenNonces.delete(key);
+    }
+  }
+  const key = `${did}:${nonce}`;
+  if (seenNonces.has(key)) {
+    throw new Error("Relay auth nonce was already used");
+  }
+  seenNonces.set(key, now + NONCE_TTL_MS);
+}
+
 export function createRelayServer(store: RelayStore) {
   return createServer(async (request, response) => {
     try {
@@ -122,13 +142,16 @@ async function requireAuth(
   if (!bundle) {
     throw new Error("Authenticated DID is not registered");
   }
-  verifyRelayRequest({
+  const verification = verifyRelayRequest({
     identity: bundle.identity,
     method,
     path,
     body,
     headers: request.headers,
   });
+  // Only remember nonces for requests that already carry a valid signature, so
+  // an attacker cannot pollute the cache for arbitrary DIDs.
+  rememberNonce(verification.did, verification.nonce);
 }
 
 function sendJson(response: ServerResponse, status: number, value: unknown): void {

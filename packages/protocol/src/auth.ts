@@ -4,6 +4,7 @@ import {
   base64UrlToBytes,
   bytesToBase64Url,
   canonicalJson,
+  randomBytes,
   utf8ToBytes,
 } from "./encoding.js";
 import type { JsonValue, LocalIdentity, PublicIdentity } from "./types.js";
@@ -11,12 +12,14 @@ import type { JsonValue, LocalIdentity, PublicIdentity } from "./types.js";
 export interface RelayAuthHeaders {
   "x-nnm-did": string;
   "x-nnm-timestamp": string;
+  "x-nnm-nonce": string;
   "x-nnm-signature": string;
 }
 
 export interface RelayAuthVerification {
   did: string;
   timestamp: string;
+  nonce: string;
 }
 
 export function bodyToAuthString(body: JsonValue | string | undefined): string {
@@ -30,6 +33,7 @@ export function relayAuthPayload(input: {
   method: string;
   path: string;
   timestamp: string;
+  nonce: string;
   body: string;
 }): Uint8Array {
   const bodyHash = bytesToBase64Url(sha256(utf8ToBytes(input.body)));
@@ -39,6 +43,7 @@ export function relayAuthPayload(input: {
       input.method.toUpperCase(),
       input.path,
       input.timestamp,
+      input.nonce,
       bodyHash,
     ].join("\n"),
   );
@@ -50,18 +55,22 @@ export function signRelayRequest(input: {
   path: string;
   body?: JsonValue | string;
   timestamp?: string;
+  nonce?: string;
 }): RelayAuthHeaders {
   const timestamp = input.timestamp ?? new Date().toISOString();
+  const nonce = input.nonce ?? bytesToBase64Url(randomBytes(16));
   const body = bodyToAuthString(input.body);
   const payload = relayAuthPayload({
     method: input.method,
     path: input.path,
     timestamp,
+    nonce,
     body,
   });
   return {
     "x-nnm-did": input.identity.did,
     "x-nnm-timestamp": timestamp,
+    "x-nnm-nonce": nonce,
     "x-nnm-signature": bytesToBase64Url(
       ed25519.sign(payload, base64UrlToBytes(input.identity.private.signingSecretKey)),
     ),
@@ -79,9 +88,10 @@ export function verifyRelayRequest(input: {
 }): RelayAuthVerification {
   const didHeader = singleHeader(input.headers["x-nnm-did"]);
   const timestamp = singleHeader(input.headers["x-nnm-timestamp"]);
+  const nonce = singleHeader(input.headers["x-nnm-nonce"]);
   const signature = singleHeader(input.headers["x-nnm-signature"]);
 
-  if (!didHeader || !timestamp || !signature) {
+  if (!didHeader || !timestamp || !nonce || !signature) {
     throw new Error("Missing relay auth headers");
   }
   if (didHeader !== input.identity.did) {
@@ -104,6 +114,7 @@ export function verifyRelayRequest(input: {
     method: input.method,
     path: input.path,
     timestamp,
+    nonce,
     body,
   });
   const valid = ed25519.verify(
@@ -115,7 +126,7 @@ export function verifyRelayRequest(input: {
     throw new Error("Invalid relay auth signature");
   }
 
-  return { did: didHeader, timestamp };
+  return { did: didHeader, timestamp, nonce };
 }
 
 function singleHeader(value: string | string[] | undefined): string | undefined {
